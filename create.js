@@ -22,9 +22,7 @@ export function toValidPackageName(name) {
     .replace(/[^a-z0-9~.-]+/g, '-');
 }
 
-console.log(`\
-${chalk.gray(`[@ircam/create#v${version}]`)}
-`);
+console.log(`${chalk.gray(`[@ircam/create#v${version}]`)}`);
 
 let targetDir;
 if (process.argv[2]) {
