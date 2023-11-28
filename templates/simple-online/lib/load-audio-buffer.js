@@ -3,7 +3,6 @@ const contexts = new Map();
 export default async function loadAudioBuffer(pathname, sampleRate = 48000) {
   if (!contexts.has(sampleRate)) {
     const context = new OfflineAudioContext(1, 1, sampleRate);
-    console.log(context.sampleRate);
     contexts.set(sampleRate, context);
   }
 
