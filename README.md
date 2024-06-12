@@ -14,7 +14,7 @@ npx @ircam/create@latest [dirname]
 Usage: create [options] [dirname]
 
 Arguments:
-  dirname                     Directory in which we should create the project
+  dirname                  Directory in which we should create the project
 
 Options:
   -t, --template <string>  Template to use
