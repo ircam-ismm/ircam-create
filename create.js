@@ -26,7 +26,7 @@ console.log(`${chalk.gray(`[@ircam/create#v${version}]`)}`);
 const templates = ['nobuild', 'esbuild'];
 
 program
-  .argument('[path]', 'Directory in which we should create the project')
+  .argument('[dirname]', 'Directory in which we should create the project')
   .option('-t, --template <string>', 'Template to use');
 
 program.parse();
