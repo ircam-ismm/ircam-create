@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/@ircam%2Fcreate.svg)](https://badge.fury.io/js/@ircam%2Fcreate)
 
-Interactive command line tools for scaffolding simple Web Audio test apps and demos.
+Interactive command line tools for scaffolding simple test apps and demos.
 
 ## Usage
 
@@ -10,9 +10,31 @@ Interactive command line tools for scaffolding simple Web Audio test apps and de
 npx @ircam/create@latest [dirname]
 ```
 
-## TODOS
+```
+Usage: create [options] [path]
 
-- [ ] add `--template=nobuild` option on command line to simplify tutorial updates
+Arguments:
+  path                     Directory in which we should create the project
+
+Options:
+  -t, --template <string>  Template to use
+  -h, --help               display help for command
+```
+
+## Development notes
+
+To develop the generator locally:
+
+```sh
+// link globally
+// in `ircam-create` directory:
+sudo npm link
+// to create an app
+npx @ircam/create
+// unlink globally
+sudo npm unlink --global @item/create
+npm ls --global
+```
 
 ## Credits
 
