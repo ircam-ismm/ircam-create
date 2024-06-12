@@ -1,6 +1,6 @@
 {
   "name": "@ircam/create",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Interactive command line tools for scaffolding simple Web Audio test apps and demos.",
   "authors": [
     "Benjamin Matuszewski"
