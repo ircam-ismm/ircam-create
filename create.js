@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-
-import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import * as url from 'node:url';
 
 import chalk from 'chalk';
+import { program } from 'commander';
 import { mkdirp } from 'mkdirp';
 import prompts from 'prompts';
 import readdir from 'recursive-readdir';
@@ -24,9 +23,24 @@ export function toValidPackageName(name) {
 
 console.log(`${chalk.gray(`[@ircam/create#v${version}]`)}`);
 
+const templates = ['nobuild', 'esbuild'];
+
+program
+  .argument('[path]', 'Directory in which we should create the project')
+  .option('-t, --template <string>', 'Template to use');
+
+program.parse();
+
+let { template } = program.opts();
+
+if (template && !templates.includes(template)) {
+  console.log(chalk.red(`> Invalid template "${template}", valid templates are: "${templates.join('", "')}", aborting...`));
+  process.exit(1);
+}
+
 let targetDir;
-if (process.argv[2]) {
-  targetDir = process.argv[2];
+if (program.processedArgs[0]) {
+  targetDir = program.processedArgs[0];
 } else {
   targetDir = '.';
 }
@@ -53,16 +67,32 @@ if (fs.existsSync(targetWorkingDir) && fs.readdirSync(targetWorkingDir).length >
   process.exit(1);
 }
 
-const templateDir = path.join(__dirname, 'templates', 'simple-online');
+if (!template) {
+  const result = await prompts([
+    {
+      type: 'select',
+      name: 'template',
+      message: 'Pick a template',
+      choices: templates.map(value => {
+        return { value };
+      }),
+    }
+  ]);
+
+  template = result.template;
+}
+
+const templateDir = path.join(__dirname, 'templates', template);
 
 const ignoreFiles = ['.DS_Store', 'Thumbs.db'];
 const files = await readdir(templateDir, ignoreFiles);
 
 await mkdirp(targetWorkingDir);
 
-
 console.log('');
 console.log(`> scaffolding app in:`, targetWorkingDir);
+console.log(`> template:`, template);
+console.log('');
 
 for (let src of files) {
   const file = path.relative(templateDir, src);
@@ -73,14 +103,15 @@ for (let src of files) {
   switch (file) {
     case 'package.json': {
       const pkg = JSON.parse(fs.readFileSync(src));
-      pkg.name = toValidPackageName(options.name);
+      pkg.name = toValidPackageName(targetDir);
 
       fs.writeFileSync(dest, JSON.stringify(pkg, null, 2));
       break;
     }
     case 'README.md':
     case 'index.html':
-    case 'main.js': {
+    case 'main.js':
+    case 'src/index.js': {
       let content = fs.readFileSync(src).toString();
       content = content.replace(/\[app_name\]/mg, targetDir);
       fs.writeFileSync(dest, content);
@@ -95,9 +126,9 @@ for (let src of files) {
 }
 
 console.log(chalk.yellow('> your project is ready!'));
-
 console.log('')
 console.log(chalk.yellow('> next steps:'));
+
 let i = 1;
 
 const relative = path.relative(process.cwd(), targetWorkingDir);
@@ -105,7 +136,13 @@ if (relative !== '') {
   console.log(`  ${i++}: ${chalk.cyan(`cd ${relative}`)}`);
 }
 
-console.log(`  ${i++}: ${chalk.cyan('npx serve')}`);
+if (template === 'nobuild') {
+  console.log(`  ${i++}: ${chalk.cyan('npx serve')}`);
+  console.log('');
+} else if (template === 'esbuild') {
+  console.log(`  ${i++}: ${chalk.cyan('npm install')}`);
+  console.log(`  ${i++}: ${chalk.cyan('npm run dev')}`);
+  console.log('');
+}
 
-console.log('')
 console.log(`- to close the dev server, press ${chalk.bold(chalk.cyan('Ctrl-C'))}`);

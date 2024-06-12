@@ -10,6 +10,10 @@ Interactive command line tools for scaffolding simple Web Audio test apps and de
 npx @ircam/create@latest [dirname]
 ```
 
+## TODOS
+
+- [ ] add `--template=nobuild` option on command line to simplify tutorial updates
+
 ## Credits
 
 [https://soundworks.dev/credits.html](https://soundworks.dev/credits.html)

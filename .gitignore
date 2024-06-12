@@ -2,3 +2,4 @@
 .Thumb.db
 
 node_modules
+templates/esbuild/build
