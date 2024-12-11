@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "concurrently \"esbuild src/index.js --bundle --format=esm --watch --outdir=build\" \"serve\""
+    "dev": "concurrently \"esbuild src/index.js --bundle --format=esm --watch --sourcemap=inline --outfile=build/index.js\" \"serve\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
